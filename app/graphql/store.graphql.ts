@@ -11,14 +11,6 @@ const store = `#graphql
             }
             shopOwnerName
         }
-
-        themes(first: 10, roles: [MAIN]) {
-            nodes {
-                id
-                name
-                role
-            }
-        }
     }
 `;
 
