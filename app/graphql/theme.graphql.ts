@@ -1,6 +1,6 @@
 const theme = `#graphql
     query {
-        themes(first: 10, roles: [MAIN]) {
+        themes(first: 100, roles: [MAIN]) {
             nodes {
                 id
                 name

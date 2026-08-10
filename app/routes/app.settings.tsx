@@ -1,6 +1,11 @@
 import { Table } from "app/components";
+import { loader as settingsLoaderType } from "../modules/settings";
+import { useLoaderData } from "react-router";
+
+export { loader } from "../modules/settings";
 
 export default function SettingsPage() {
+  const loaderData = useLoaderData<typeof settingsLoaderType>();
 
   const productsMock = [
       {
