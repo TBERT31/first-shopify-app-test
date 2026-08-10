@@ -3,10 +3,10 @@ import { storeGraphql } from "app/graphql";
 
 const getData = async (admin: AdminApiContext) =>{
     const response = await admin.graphql(storeGraphql.store);
-    const responseJson =  await response.json(); 
+    const json = await response.json();
 
-    console.log('Store Service', responseJson);
-    return responseJson.data.store;
+    console.log("Store Data in Services:", json.data);
+    return json.data;
 }
 
 const storeService = {
