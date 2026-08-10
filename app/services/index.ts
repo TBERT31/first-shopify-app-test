@@ -1,2 +1,1 @@
-export { default as storeService } from "./store.service";
-export { default as themeService } from "./theme.service";
+export { default as shopifyGraphqlService } from "./shopifyGraphql.service";

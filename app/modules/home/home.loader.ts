@@ -1,4 +1,5 @@
-import { storeService, themeService } from "app/services";
+import { storeGraphql, themeGraphql } from "app/graphql";
+import { shopifyGraphqlService } from "app/services";
 import { authenticate } from "app/shopify.server";
 import { data, type LoaderFunctionArgs } from "react-router";
 
@@ -6,8 +7,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
 
   const [storeData, themeData] = await Promise.all([
-    storeService.getData(admin),
-    themeService.getData(admin),
+    shopifyGraphqlService.getData(admin, storeGraphql.store),
+    shopifyGraphqlService.getData(admin, themeGraphql.theme),
   ]);
 
   const { shopOwnerName, primaryDomain } = storeData.shop;
