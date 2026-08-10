@@ -9,12 +9,7 @@ import { useAppBridge } from "@shopify/app-bridge-react";
 import { authenticate } from "../shopify.server";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  console.log("Second one called");
-  await authenticate.admin(request);
-
-  return null;
-};
+export { loader } from "../modules/home/home.loader";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
