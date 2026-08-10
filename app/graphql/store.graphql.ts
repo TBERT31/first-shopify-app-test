@@ -2,11 +2,6 @@ export const store = `#graphql
     query {
         shop {
             name
-            accountOwner {
-                email
-                firstName
-                exists
-            }
             contactEmail
             id
             email 
