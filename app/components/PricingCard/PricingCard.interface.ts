@@ -3,7 +3,7 @@ type ShopifyButtonProps = Omit<
   "children"
 >;
 
-export interface PricingCardProps {
+export interface IPricingCardProps {
   title: string;
   description?: string;
   price: string;

@@ -1,4 +1,4 @@
-import type { PricingCardProps } from "./PricingCard.interface";
+import type { IPricingCardProps } from "./PricingCard.interface";
 
 const PricingCard = ({
   title,
@@ -8,7 +8,7 @@ const PricingCard = ({
   featuredText,
   button,
   frequency,
-}: PricingCardProps) => {
+}: IPricingCardProps) => {
   return (
     <div
       style={{
