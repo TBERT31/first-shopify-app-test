@@ -1,14 +1,11 @@
-import { useEffect } from "react";
 import type {
   ActionFunctionArgs,
   HeadersFunction,
-  LoaderFunctionArgs,
 } from "react-router";
-import { useFetcher } from "react-router";
-import { useAppBridge } from "@shopify/app-bridge-react";
+import { useLoaderData } from "react-router";
 import { authenticate } from "../shopify.server";
 import { boundary } from "@shopify/shopify-app-react-router/server";
-
+import { loader as loaderHomeType } from "../modules/home";
 export { loader } from "../modules/home";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -19,16 +16,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Index() {
-  const fetcher = useFetcher<typeof action>();
-  const submitHandler = () => {
-    fetcher.submit(null, { method: "post" });
-  }; 
+  const loaderData = useLoaderData<typeof loaderHomeType>();
+  const { shopOwnerName, themeEditorUrl } = loaderData;
+
+  const title = `Welcome to LIKE PRODUCTS, ${shopOwnerName}!`;
 
   return (
     <s-page heading="LIKE PRODUCT">
       <s-stack gap="base large-300">
 
-        <s-section heading="[[NAME]] Welcome to LIKE PRODUCTS app!">
+        <s-section heading={title}>
           <s-paragraph>Here you can enable likes for your products.</s-paragraph>
         </s-section>
 
@@ -45,7 +42,7 @@ export default function Index() {
 
         <s-section heading="Tutorial">
             <s-ordered-list>
-              <s-list-item>Go to your product <s-link>theme editor</s-link></s-list-item>
+              <s-list-item>Go to your product <s-link href={themeEditorUrl} target="_blank">theme editor</s-link></s-list-item>
               <s-list-item>Select the default Product page</s-list-item>
               <s-list-item>Add a new section</s-list-item>
               <s-list-item>Click on app</s-list-item>

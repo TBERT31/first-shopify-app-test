@@ -1,4 +1,4 @@
-export const store = `#graphql
+const store = `#graphql
     query {
         shop {
             name
@@ -10,6 +10,14 @@ export const store = `#graphql
                 host
             }
             shopOwnerName
+        }
+
+        themes(first: 10, roles: [MAIN]) {
+            nodes {
+                id
+                name
+                role
+            }
         }
     }
 `;
