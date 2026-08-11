@@ -17,12 +17,12 @@ const Table = ({
                             <s-table-row key={id}>
                                 <s-table-cell>
                                     <s-thumbnail
-                                        src={product.productThumbnail}
-                                        alt={product.productName}
+                                        src={product?.image  ?? ""}
+                                        alt={product?.alt ?? ""}
                                     />
                                 </s-table-cell>
                                 <s-table-cell>
-                                    {product.productName}
+                                    {product.title}
                                 </s-table-cell>
                                 <s-table-cell>
                                     <s-button tone="critical">

@@ -1,6 +1,8 @@
 export interface ITableProps {
     products: {
-        productName: string;
-        productThumbnail: string;
+        id: string;
+        title: string;
+        image: string;
+        alt: string;
     }[];
 }

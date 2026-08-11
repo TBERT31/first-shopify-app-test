@@ -1,6 +1,20 @@
 const products = `#graphql
-    query {
-        
+    query GetProducts {
+        products(first:10) {
+            nodes {
+                id
+                title
+                featuredMedia {
+                    preview {
+                        image {
+                            altText
+                            url
+                            thumbhash
+                        }
+                    }
+                }
+            }
+        }
     }
 `;
 
