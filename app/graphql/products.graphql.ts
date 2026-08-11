@@ -1,58 +1,85 @@
 const products = `#graphql
-    query GetProducts {
-        products(first:10, after: ) {
-            nodes {
-                id
-                title
-                featuredMedia {
-                    preview {
-                        image {
-                            altText
-                            url
-                            thumbhash
-                        }
-                    }
-                }
+  query GetProducts {
+    products(first: 10) {
+      nodes {
+        id
+        title
+        featuredMedia {
+          preview {
+            image {
+              altText
+              url
+              thumbhash
             }
-            pageInfo {
-                hasNextPage
-                hasPreviousPage
-                endCusor
-                startCursor
-            }
+          }
         }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        endCursor
+        startCursor
+      }
     }
+  }
 `;
 
-const paginatedProducts = (after: string) => {`#graphql
-    query GetPaginatedProducts($after: String) {
-        products(first:10, after: $after) {
-            nodes {
-                id
-                title
-                featuredMedia {
-                    preview {
-                        image {
-                            altText
-                            url
-                            thumbhash
-                        }
-                    }
-                }
+const paginatedProductsAfter = (after: string) => `#graphql
+  query GetPaginatedProductsAfter {
+    products(first: 10, after: "${after}") {
+      nodes {
+        id
+        title
+        featuredMedia {
+          preview {
+            image {
+              altText
+              url
+              thumbhash
             }
-            pageInfo {
-                hasNextPage
-                hasPreviousPage
-                endCusor
-                startCursor
-            }
+          }
         }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        endCursor
+        startCursor
+      }
     }
-`}
+  }
+`;
+
+const paginatedProductsBefore = (before: string) => `#graphql
+  query GetPaginatedProductsBefore {
+    products(last: 10, before: "${before}") {
+      nodes {
+        id
+        title
+        featuredMedia {
+          preview {
+            image {
+              altText
+              url
+              thumbhash
+            }
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        endCursor
+        startCursor
+      }
+    }
+  }
+`;
 
 const graphql = {
-    products,
-    paginatedProducts,
-}
+  products,
+  paginatedProductsAfter,
+  paginatedProductsBefore,
+};
 
 export default graphql;

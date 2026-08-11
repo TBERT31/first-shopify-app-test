@@ -3,6 +3,7 @@ import { loader as settingsLoaderType } from "../modules/settings";
 import { useLoaderData } from "react-router";
 
 export { loader } from "../modules/settings";
+export { action } from "../modules/settings";
 
 export default function SettingsPage() {
   const loaderData = useLoaderData<typeof settingsLoaderType>();
@@ -16,7 +17,7 @@ export default function SettingsPage() {
             You need to select the products below to disable the like button on its product page.
           </s-paragraph>
         </s-section>
-        <Table  products={ products }/>
+        <Table  products={ products } pageInfo={ pageInfo }/>
       </s-stack>
     </s-page>
   );

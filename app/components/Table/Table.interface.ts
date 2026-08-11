@@ -4,5 +4,11 @@ export interface ITableProps {
         title: string;
         image: string;
         alt: string;
-    }[];
+    }[],
+    pageInfo: {
+        hasNextPage: boolean;
+        hasPreviousPage: boolean;
+        endCursor: string;
+        startCursor: string;
+    };
 }
