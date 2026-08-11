@@ -9,14 +9,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const body = await request.formData();
   const after = body.get("after") as string || '';
   const before = body.get("before") as string || '';
+  const query = body.get("query") as string || '';
 
   let products;
 
   if(after) {
-    const data = await shopifyGraphqlService.getData(admin, productsGraphql.paginatedProductsAfter(after));
+    const data = await shopifyGraphqlService.getData(admin, productsGraphql.products, { 
+        first:5, 
+        after, 
+        query: query ? `title: ${query}*` : undefined
+    });
+    products = data.products;
+  } else if(before) {
+    const data = await shopifyGraphqlService.getData(admin, productsGraphql.products, { 
+        last:5, 
+        before, 
+        query: `title: ${query}*`  
+    });
     products = data.products;
   } else {
-    const data = await shopifyGraphqlService.getData(admin, productsGraphql.paginatedProductsBefore(before));
+    const data = await shopifyGraphqlService.getData(admin, productsGraphql.products, { 
+        first:5, 
+        query: query ? `title: ${query}*` : undefined
+    });
     products = data.products;
   }
 

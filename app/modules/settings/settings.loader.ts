@@ -6,7 +6,7 @@ import productsHandler from "./products.handler";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
-  const { products } = await shopifyGraphqlService.getData(admin, productsGraphql.products);
+  const { products } = await shopifyGraphqlService.getData(admin, productsGraphql.products, { first: 5 });
   const formattedProducts = productsHandler.format(products?.nodes ?? []);
 
   return data({

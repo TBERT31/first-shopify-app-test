@@ -11,15 +11,21 @@ const Table = ({
     const [endCursor, setEndCursor] = useState(pageInfo.endCursor);
     const [startCursor, setStartCursor] = useState(pageInfo.startCursor);
     const [productList, setProductList] = useState(products);
+    const [searchTerm, setSearchTerm] = useState('');
     const fetcher = useFetcher();
     const loading = fetcher.state === 'loading' || fetcher.state === 'submitting';
 
     const handleNextPage = () => {
-        fetcher.submit({ after: endCursor }, { method: "post"});
+        fetcher.submit({ after: endCursor, query: searchTerm }, { method: "post"});
     }
 
     const handlePreviousPage = () => {
-        fetcher.submit({ before: startCursor }, { method: "post"});
+        fetcher.submit({ before: startCursor, query: searchTerm }, { method: "post"});
+    }
+
+    const handleSearch = (query: string) => {
+        setSearchTerm(query);
+        fetcher.submit({query}, {method: "post"});
     }
 
     useEffect(() => {
@@ -33,7 +39,13 @@ const Table = ({
     }, [fetcher.data]);
 
     return (
-        <s-section padding="none">
+        <s-section padding="base">
+            <s-search-field
+             label="Search"
+             labelAccessibilityVisibility="exclusive"
+             placeholder="Search items"
+             onChange={e => handleSearch(e.currentTarget.value)}
+            />
             <s-table 
              paginate 
              hasNextPage={hasNextPage} 
