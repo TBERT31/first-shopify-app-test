@@ -4,7 +4,6 @@ const getData = async (admin: AdminApiContext, graphql: string) =>{
     const response = await admin.graphql(graphql);
     const json = await response.json();
 
-    console.log(`Shopify ${graphql} Data in Services:`, json.data);
     return json.data;
 }
 

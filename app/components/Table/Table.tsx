@@ -5,7 +5,7 @@ const Table = ({
 }: ITableProps) => {
     return (
         <s-section padding="none">
-            <s-table>
+            <s-table>   
                 <s-table-header-row>
                     <s-table-header></s-table-header>
                     <s-table-header>Name</s-table-header>

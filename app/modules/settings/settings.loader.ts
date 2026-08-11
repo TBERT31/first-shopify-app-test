@@ -11,5 +11,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   return data({
     products: formattedProducts,
+    pageInfo: products.pageInfo,
   });
 };

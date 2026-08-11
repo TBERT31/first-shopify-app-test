@@ -11,7 +11,6 @@ export { loader } from "../modules/home";
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { admin } = await authenticate.admin(request);
   
-  console.log("Action called with admin:", admin);
   return null;
 };
 
