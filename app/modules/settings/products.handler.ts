@@ -10,6 +10,7 @@ interface IProductsNode {
             };
         };
     };
+    disabled: boolean;
 }
 
 const format = (nodes: IProductsNode[]) => {
@@ -22,6 +23,7 @@ const format = (nodes: IProductsNode[]) => {
         title: node.title,
         image: node.featuredMedia?.preview?.image?.url ?? "",
         alt: node.featuredMedia?.preview?.image?.alt ?? "Product image",
+        disabled: node.disabled,
     }));
 }
 
