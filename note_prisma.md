@@ -1,0 +1,4 @@
+- npx prisma studio
+- npx prisma generate
+- npx prisma migrate reset
+- npx prisma migrate dev

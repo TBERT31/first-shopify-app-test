@@ -31,4 +31,17 @@ model Session {
   emailVerified Boolean?  @default(false)
   refreshToken        String?
   refreshTokenExpires DateTime?
+
+  @@map("sessions")
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  shopifyId   String    @unique
+  disabled    Boolean   @default(false)
+  shop        String
+  createdAt   DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+
+  @@map("products")        
 }
