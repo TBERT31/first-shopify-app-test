@@ -1,0 +1,76 @@
+{% liquid
+  assign liked_product = block.settings.product
+
+  if liked_product == blank and product != blank
+    assign liked_product = product
+  endif
+
+  assign button_label = block.settings.label | default: 'Like'
+  assign liked_label = block.settings.liked_label | default: 'Liked'
+%}
+
+{% if request.page_type == 'product' and liked_product != blank %}
+  <div
+    id="LikeButton-{{ block.id }}"
+    class="like-button"
+    data-like-button
+    data-product-id="{{ liked_product.id }}"
+    data-like-label="{{ button_label | escape }}"
+    data-liked-label="{{ liked_label | escape }}"
+    {{ block.shopify_attributes }}
+  >
+    <button
+      type="button"
+      class="like-button__button"
+      data-like-button-trigger
+      aria-pressed="false"
+      aria-label="{{ button_label | escape }}"
+    >
+      <span class="like-button__icon like-button__icon--off" aria-hidden="true">&#9825;</span>
+      <span class="like-button__icon like-button__icon--on" aria-hidden="true">&#9829;</span>
+      <span class="like-button__label" data-like-button-label>{{ button_label | escape }}</span>
+
+      {% if block.settings.show_count %}
+        <span class="like-button__count" data-like-button-count aria-live="polite">0</span>
+      {% endif %}
+    </button>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Like button",
+  "target": "section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "stylesheet": "like-button.css",
+  "javascript": "like-button.js",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "autofill": true
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Button label",
+      "default": "Like"
+    },
+    {
+      "type": "text",
+      "id": "liked_label",
+      "label": "Liked label",
+      "default": "Liked"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show count",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
