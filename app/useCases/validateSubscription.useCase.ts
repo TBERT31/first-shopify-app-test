@@ -1,11 +1,11 @@
 import { AdminApiContext } from "@shopify/shopify-app-react-router/server";
 import { appGraphql, chargeGraphql } from "app/graphql";
 import { shopifyGraphqlService } from "app/services";
-import { RedirectFunction } from "react-router";
+import { RedirectFunction } from "node_modules/@shopify/shopify-app-react-router/dist/ts/server/authenticate/admin/helpers/redirect";
 
 const getSubscriptionStatus = async (admin: AdminApiContext) => {
     const appData = await shopifyGraphqlService.getData(admin, appGraphql.currentAppInstallation);
-    const status = appData.currentAppInstallation.activeSubscriptions;
+    const status = appData?.currentAppInstallation?.activeSubscriptions[0]?.status;
 
     if(status === "ACTIVE") {
         return {
@@ -36,7 +36,7 @@ const validateSubscriptionUseCase = async (admin: AdminApiContext, redirect: Red
     if(!valid) {
         const confirmationUrl = await createSubscription(admin, launchUrl);
         console.log("Redirection to subscription confirmation URL:", confirmationUrl);
-        return redirect(confirmationUrl);
+        return redirect(confirmationUrl, { target:  "_parent"});
     }
 
     return;
