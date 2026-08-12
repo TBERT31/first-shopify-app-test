@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { ITableProps } from "./Table.interface";
+import type { IProduct, ITableProps } from "./Table.interface";
 import { useFetcher } from "react-router";
 
 const Table = ({
@@ -12,7 +12,10 @@ const Table = ({
     const [startCursor, setStartCursor] = useState(pageInfo.startCursor);
     const [productList, setProductList] = useState(products);
     const [searchTerm, setSearchTerm] = useState('');
+
     const fetcher = useFetcher();
+    const updateProductFetcher = useFetcher({ key: 'update-product' });
+
     const loading = fetcher.state === 'loading' || fetcher.state === 'submitting';
 
     const handleNextPage = () => {
@@ -28,6 +31,13 @@ const Table = ({
         fetcher.submit({query}, {method: "post"});
     }
 
+    const updateProduct = (product: IProduct) => {
+        updateProductFetcher.submit(
+            { productId: product.id, status: !product.disabled }, 
+            { method: "post", action: '/api/product' }
+        );
+    }
+
     useEffect(() => {
         if(fetcher.data) {
             setProductList(fetcher.data.products);
@@ -37,6 +47,22 @@ const Table = ({
             setStartCursor(fetcher.data.pageInfo.startCursor);
         }
     }, [fetcher.data]);
+
+    const ButtonElement = (product: IProduct) => {
+        return (
+            <s-button tone={ product.disabled ? "neutral" : "critical"} >
+                <s-stack direction="inline" gap="small-400" alignItems="center">
+                    <s-icon 
+                     tone={ product.disabled ? "success" : "critical"} 
+                     type={ product.disabled ? "status-active" : "disabled"} 
+                    />
+                    <s-paragraph tone={ product.disabled ? "success" : "critical"}>
+                        { product.disabled ? "Enable" : "Disable"}
+                    </s-paragraph>
+                </s-stack>
+            </s-button>
+        )
+    }
 
     return (
         <s-section padding="base">
@@ -73,12 +99,7 @@ const Table = ({
                                     {product.title}
                                 </s-table-cell>
                                 <s-table-cell>
-                                    <s-button tone="critical">
-                                        <s-stack direction="inline" gap="small-400" alignItems="center">
-                                            <s-icon tone="critical" type="disabled"/>
-                                            <s-paragraph tone="critical">Disable</s-paragraph>
-                                        </s-stack>
-                                    </s-button>
+                                    <ButtonElement {...product} />
                                 </s-table-cell>
                             </s-table-row>
                         ))
