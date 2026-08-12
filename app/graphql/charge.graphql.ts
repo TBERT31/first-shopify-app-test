@@ -32,6 +32,7 @@ const appSubscriptionCreateVariables = (returnUrl: string) => {
         name: "Basic Plan",
         returnUrl,
         test: isTestEnvironnement,
+        trialDays: 7,
         lineItems: [
             {
                 plan: {

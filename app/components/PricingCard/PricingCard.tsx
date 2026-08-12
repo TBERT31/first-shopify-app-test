@@ -86,7 +86,12 @@ const PricingCard = ({
 
           {button ? (
             <s-stack alignItems="end">
-              <s-button {...button.props}>{button.content}</s-button>
+              <s-button 
+               disabled={button.content === 'Selected'} 
+               {...button.props}
+              >
+                {button.content}
+              </s-button>
             </s-stack>
           ) : null}
         </s-stack>

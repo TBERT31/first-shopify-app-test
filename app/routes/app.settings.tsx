@@ -6,8 +6,7 @@ export { loader } from "../modules/settings";
 export { action } from "../modules/settings";
 
 export default function SettingsPage() {
-  const loaderData = useLoaderData<typeof settingsLoaderType>();
-  const { products, pageInfo } = loaderData;
+  const { products, pageInfo } = useLoaderData<typeof settingsLoaderType>();
 
   return (
     <s-page heading="Settings">
