@@ -48,6 +48,13 @@ const Table = ({
         }
     }, [fetcher.data]);
 
+    useEffect(() => {
+        if(updateProductFetcher.data) {
+            const updatedProduct = updateProductFetcher.data.products;
+            setProductList(prevProducts => prevProducts.map(prod => prod.id === updatedProduct.shopifyId ? {...prod, disabled: updatedProduct.disabled } : prod));
+        }
+    }, [updateProductFetcher.data])
+
     const ButtonElement = (product: IProduct) => {
         return (
             <s-button tone={ product.disabled ? "neutral" : "critical"} >
