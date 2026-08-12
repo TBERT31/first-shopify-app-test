@@ -11,6 +11,7 @@ export interface IPricingCardProps {
   featuredText?: string;
   button?: {
     content: string;
+    disabled: boolean;
     props?: ShopifyButtonProps;
   };
   frequency?: string;

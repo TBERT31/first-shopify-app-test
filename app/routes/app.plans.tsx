@@ -17,7 +17,10 @@ export default function PlansPage() {
             price="$3"
             features={["Many likes as possible", "Email support", "Analytics"]}
             featuredText="Popular"
-            button={{ content: subscriptionStatus ? "Selected" : "Select Plan" }}
+            button={{ 
+              content: subscriptionStatus ? "Selected" : "Select Plan", 
+              disabled: subscriptionStatus 
+            }}
             frequency="month"
           />
         </s-stack>

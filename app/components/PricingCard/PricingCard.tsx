@@ -87,7 +87,7 @@ const PricingCard = ({
           {button ? (
             <s-stack alignItems="end">
               <s-button 
-               disabled={button.content === 'Selected'} 
+               disabled={button.disabled} 
                {...button.props}
               >
                 {button.content}
