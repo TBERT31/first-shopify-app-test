@@ -41,3 +41,5 @@ const validateSubscriptionUseCase = async (admin: AdminApiContext, redirect: Red
 
     return;
 }
+
+export default validateSubscriptionUseCase;
