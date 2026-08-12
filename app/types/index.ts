@@ -1,0 +1,1 @@
+export type { UpdateProductResponse } from "./update-product-response.type";
