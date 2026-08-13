@@ -1,34 +1,50 @@
 (function () {
   var rootSelector = "[data-like-button]";
-  var storagePrefix = "like-button:";
+  var storagePrefix = "like-button-visitor-id";
 
-  function getStoredValue(key) {
+  function getOrCreateVisitorId() {
     try {
-      return window.localStorage.getItem(key);
+      var existingId = window.localStorage.getItem(storagePrefix);
+
+      if (existingId) {
+        return existingId;
+      }
+
+      var newId =
+        window.crypto && window.crypto.randomUUID
+          ? window.crypto.randomUUID()
+          : String(Date.now()) + "-" + String(Math.random()).slice(2);
+
+      window.localStorage.setItem(storagePrefix, newId);
+      return newId;
     } catch (error) {
-      return null;
+      return String(Date.now()) + "-" + String(Math.random()).slice(2);
     }
   }
 
-  function setStoredValue(key, value) {
-    try {
-      window.localStorage.setItem(key, value);
-    } catch (error) {
-      // Ignore storage failures so the button still works for the current page.
-    }
+  function getStateUrl(root) {
+    var endpoint = root.dataset.endpoint || "/apps/like-product";
+    var params = new URLSearchParams({
+      productId: root.dataset.productId || "",
+      visitorId: getOrCreateVisitorId(),
+    });
+
+    return endpoint + "?" + params.toString();
   }
 
-  function render(root, liked) {
+  function render(root, state) {
     var button = root.querySelector("[data-like-button-trigger]");
     var label = root.querySelector("[data-like-button-label]");
     var count = root.querySelector("[data-like-button-count]");
     var likeLabel = root.dataset.likeLabel || "Like";
     var likedLabel = root.dataset.likedLabel || "Liked";
+    var liked = Boolean(state && state.liked);
 
     if (!button) {
       return;
     }
 
+    root.hidden = Boolean(state && state.disabled);
     button.setAttribute("aria-pressed", liked ? "true" : "false");
     button.setAttribute("aria-label", liked ? likedLabel : likeLabel);
 
@@ -37,8 +53,20 @@
     }
 
     if (count) {
-      count.textContent = liked ? "1" : "0";
+      count.textContent = state && typeof state.count === "number" ? String(state.count) : "0";
     }
+  }
+
+  async function requestState(root, method) {
+    var response = await fetch(getStateUrl(root), {
+      method: method || "GET",
+    });
+
+    if (!response.ok && response.status !== 403) {
+      throw new Error("Unable to update like button state");
+    }
+
+    return response.json();
   }
 
   function initLikeButton(root) {
@@ -47,21 +75,32 @@
     }
 
     var button = root.querySelector("[data-like-button-trigger]");
-    var productId = root.dataset.productId || root.id;
-    var storageKey = storagePrefix + productId;
-    var liked = getStoredValue(storageKey) === "true";
 
     root.dataset.likeButtonInitialized = "true";
-    render(root, liked);
+    root.hidden = true;
 
     if (!button) {
       return;
     }
 
+    requestState(root, "GET")
+      .then(function (state) {
+        render(root, state);
+      })
+      .catch(function () {
+        root.hidden = true;
+      });
+
     button.addEventListener("click", function () {
-      liked = !liked;
-      setStoredValue(storageKey, liked ? "true" : "false");
-      render(root, liked);
+      button.disabled = true;
+
+      requestState(root, "POST")
+        .then(function (state) {
+          render(root, state);
+        })
+        .finally(function () {
+          button.disabled = false;
+        });
     });
   }
 

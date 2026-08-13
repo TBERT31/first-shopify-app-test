@@ -37,11 +37,24 @@ model Session {
 
 model Product {
   id          String    @id @default(uuid())
-  shopifyId   String    @unique
+  shopifyId   String
   disabled    Boolean   @default(false)
   shop        String
   createdAt   DateTime  @default(now())
   updateAt    DateTime  @updatedAt
 
+  @@unique([shop, shopifyId])
   @@map("products")        
+}
+
+model ProductLike {
+  id        String   @id @default(uuid())
+  shop      String
+  productId String
+  visitorId String
+  createdAt DateTime @default(now())
+
+  @@unique([shop, productId, visitorId])
+  @@index([shop, productId])
+  @@map("product_likes")
 }
