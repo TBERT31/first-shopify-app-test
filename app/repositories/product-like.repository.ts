@@ -3,7 +3,7 @@ import prisma from "app/db.server";
 type ProductLikeInput = {
   shop: string;
   productId: string;
-  visitorId: string;
+  customerId: string;
 };
 
 const countByProduct = (shop: string, productId: string) => {
@@ -15,35 +15,35 @@ const countByProduct = (shop: string, productId: string) => {
   });
 };
 
-const findByVisitor = ({ shop, productId, visitorId }: ProductLikeInput) => {
+const findByCustomer = ({ shop, productId, customerId }: ProductLikeInput) => {
   return prisma.productLike.findUnique({
     where: {
-      shop_productId_visitorId: {
+      shop_productId_customerId: {
         shop,
         productId,
-        visitorId,
+        customerId,
       },
     },
   });
 };
 
-const create = ({ shop, productId, visitorId }: ProductLikeInput) => {
+const create = ({ shop, productId, customerId }: ProductLikeInput) => {
   return prisma.productLike.create({
     data: {
       shop,
       productId,
-      visitorId,
+      customerId,
     },
   });
 };
 
-const remove = ({ shop, productId, visitorId }: ProductLikeInput) => {
+const remove = ({ shop, productId, customerId }: ProductLikeInput) => {
   return prisma.productLike.delete({
     where: {
-      shop_productId_visitorId: {
+      shop_productId_customerId: {
         shop,
         productId,
-        visitorId,
+        customerId,
       },
     },
   });
@@ -52,7 +52,7 @@ const remove = ({ shop, productId, visitorId }: ProductLikeInput) => {
 const repository = {
   countByProduct,
   create,
-  findByVisitor,
+  findByCustomer,
   remove,
 };
 

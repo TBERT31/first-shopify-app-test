@@ -51,10 +51,10 @@ model ProductLike {
   id        String   @id @default(uuid())
   shop      String
   productId String
-  visitorId String
+  customerId String
   createdAt DateTime @default(now())
 
-  @@unique([shop, productId, visitorId])
+  @@unique([shop, productId, customerId])
   @@index([shop, productId])
   @@map("product_likes")
 }
