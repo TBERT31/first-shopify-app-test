@@ -6,7 +6,7 @@ import { data, type ActionFunctionArgs } from "react-router";
 import productsHandler from "./products.handler";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { admin } = await authenticate.admin(request);
+  const { admin, session } = await authenticate.admin(request);
   const body = await request.formData();
 
   const after = (body.get("after") as string) || "";
@@ -29,7 +29,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const products = response.products;
   const productIds = products?.nodes?.map((product: any) => product.id) ?? [];
-  const productsDb = await productRepository.findManyByShopifyId(productIds);
+  const productsDb = await productRepository.findManyByShopifyId(session.shop, productIds);
 
   const mergedProducts =
     products?.nodes?.map((product: any) => {

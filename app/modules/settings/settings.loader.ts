@@ -7,10 +7,10 @@ import { productRepository } from "app/repositories";
 import { IProduct } from "app/components/Table/Table.interface";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { admin } = await authenticate.admin(request);
+  const { admin, session } = await authenticate.admin(request);
   const { products } = await shopifyGraphqlService.getData(admin, productsGraphql.products, { first: 5 });
   const productIds = products?.nodes?.map((product: any) => product.id || []);
-  const productsDb = await productRepository.findManyByShopifyId(productIds);
+  const productsDb = await productRepository.findManyByShopifyId(session.shop, productIds);
 
   const mergedProducts = products?.nodes?.map((product: any) => {
     const productDb =  productsDb.find(p => p.shopifyId === product.id);

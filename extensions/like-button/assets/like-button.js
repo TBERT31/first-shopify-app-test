@@ -1,44 +1,71 @@
 (function () {
   var rootSelector = "[data-like-button]";
-  var storagePrefix = "like-button:";
 
-  function getStoredValue(key) {
-    try {
-      return window.localStorage.getItem(key);
-    } catch (error) {
-      return null;
+  function getStateUrl(root) {
+    var endpoint = root.dataset.endpoint || "/apps/like-product";
+    var params = new URLSearchParams({
+      productId: root.dataset.productId || "",
+    });
+    var liquidCustomerId = root.dataset.liquidCustomerId || "";
+
+    if (liquidCustomerId) {
+      params.set("customerId", liquidCustomerId);
     }
+
+    return endpoint + "?" + params.toString();
   }
 
-  function setStoredValue(key, value) {
-    try {
-      window.localStorage.setItem(key, value);
-    } catch (error) {
-      // Ignore storage failures so the button still works for the current page.
+  function getLoginUrl(root) {
+    var loginUrl = root.dataset.loginUrl || "/account/login";
+    var separator = loginUrl.indexOf("?") === -1 ? "?" : "&";
+    var returnParam = loginUrl.indexOf("/customer_authentication/login") === -1 ? "return_url" : "return_to";
+    var returnPath = window.location.pathname + window.location.search;
+
+    if (loginUrl.indexOf("return_to=") !== -1 || loginUrl.indexOf("return_url=") !== -1) {
+      return loginUrl;
     }
+
+    return loginUrl + separator + returnParam + "=" + encodeURIComponent(returnPath);
   }
 
-  function render(root, liked) {
+  function render(root, state) {
     var button = root.querySelector("[data-like-button-trigger]");
     var label = root.querySelector("[data-like-button-label]");
     var count = root.querySelector("[data-like-button-count]");
     var likeLabel = root.dataset.likeLabel || "Like";
     var likedLabel = root.dataset.likedLabel || "Liked";
+    var loginLabel = root.dataset.loginLabel || "Sign in to like";
+    var liked = Boolean(state && state.liked);
+    var requiresLogin = Boolean(state && state.requiresLogin);
 
     if (!button) {
       return;
     }
 
+    root.hidden = Boolean(state && state.disabled);
     button.setAttribute("aria-pressed", liked ? "true" : "false");
-    button.setAttribute("aria-label", liked ? likedLabel : likeLabel);
+    button.setAttribute("aria-label", requiresLogin ? loginLabel : liked ? likedLabel : likeLabel);
 
     if (label) {
-      label.textContent = liked ? likedLabel : likeLabel;
+      label.textContent = requiresLogin ? loginLabel : liked ? likedLabel : likeLabel;
     }
 
     if (count) {
-      count.textContent = liked ? "1" : "0";
+      count.textContent = state && typeof state.count === "number" ? String(state.count) : "0";
     }
+  }
+
+  async function requestState(root, method) {
+    var response = await fetch(getStateUrl(root), {
+      method: method || "GET",
+      credentials: "include",
+    });
+
+    if (!response.ok && response.status !== 401 && response.status !== 403) {
+      throw new Error("Unable to update like button state");
+    }
+
+    return response.json();
   }
 
   function initLikeButton(root) {
@@ -47,21 +74,37 @@
     }
 
     var button = root.querySelector("[data-like-button-trigger]");
-    var productId = root.dataset.productId || root.id;
-    var storageKey = storagePrefix + productId;
-    var liked = getStoredValue(storageKey) === "true";
 
     root.dataset.likeButtonInitialized = "true";
-    render(root, liked);
+    root.hidden = true;
 
     if (!button) {
       return;
     }
 
+    requestState(root, "GET")
+      .then(function (state) {
+        render(root, state);
+      })
+      .catch(function () {
+        root.hidden = true;
+      });
+
     button.addEventListener("click", function () {
-      liked = !liked;
-      setStoredValue(storageKey, liked ? "true" : "false");
-      render(root, liked);
+      button.disabled = true;
+
+      requestState(root, "POST")
+        .then(function (state) {
+          if (state && state.requiresLogin) {
+            window.location.href = getLoginUrl(root);
+            return;
+          }
+
+          render(root, state);
+        })
+        .finally(function () {
+          button.disabled = false;
+        });
     });
   }
 

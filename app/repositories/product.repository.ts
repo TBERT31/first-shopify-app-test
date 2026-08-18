@@ -1,16 +1,22 @@
 import { Prisma } from "@prisma/client"
 import prisma from "app/db.server"
 
-const findManyByShopifyId = (shopfyIds: string[]) => {
+const findManyByShopifyId = (shop: string, shopfyIds: string[]) => {
     return prisma.product.findMany({
-        where: { shopifyId: { in: shopfyIds } },
+        where: {
+            shop,
+            shopifyId: { in: shopfyIds },
+        },
     })
 }
 
 const upsertByShopifyId = ({ shopifyId, shop, disabled }: Prisma.ProductCreateInput) => {
     return prisma.product.upsert({
         where: {
-            shopifyId,
+            shop_shopifyId: {
+                shop,
+                shopifyId,
+            },
         },
         create: {
             shopifyId,
