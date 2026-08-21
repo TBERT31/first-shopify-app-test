@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useFetcher } from "react-router";
 import ProductButton from "../ProductButton";
 import type { UpdateProductResponse } from "app/types";
-import type { IProduct, ITableProps } from "./Table.interface";
+import type { ITableProps } from "./Table.interface";
 
 const Table = ({ products, pageInfo }: ITableProps) => {
   const [hasNextPage, setHasNextPage] = useState(pageInfo.hasNextPage);
